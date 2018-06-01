@@ -25,5 +25,7 @@ def main():
 
 	dio.output_netcdf()
 
+	print("Simulation all completed. Enjoy your work!")
+
 if __name__ == '__main__':
 	main()

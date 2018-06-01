@@ -48,6 +48,7 @@ def boundary_periodic(i2,nx,xb,xc,xf):
 
 def swe_solve(uin, vin, hin, uout, vout, hout):
 	# calculate gradient
+	global t
 	xb = 0
 	xc = 0
 	xf = 0
@@ -114,32 +115,31 @@ def swe_solve(uin, vin, hin, uout, vout, hout):
 				kh1[i2,j2] = phpt
 
 	elif param.loopMethod == 2:  # martix manipulation
-				phupx = (huin[2:(nx-1),1:ny-2]-huin[0:(nx-3),1:(ny-2)])*dx20
-				phupy = (huin[1:(nx-2),2:(ny-1)]-huin[1:(nx-2),0:(ny-3)])*dy20
-				phvpx = (hvin[2:(nx-1),1:(ny-2)]-hvin[0:(nx-3),1:(ny-2)])*dx20
-				phvpy = (hvin[1:(nx-2),2:(ny-1)]-hvin[1:(nx-2),0:(ny-3)])*dy20
-				upupx = uin[1:(nx-2),1:(ny-2)] * (uin[2:(nx-1),1:(ny-2)]-uin[0:(nx-3),1:(ny-2)])*dx20
-				vpupy = vin[1:(nx-2),1:(ny-2)] * (uin[1:(nx-2),2:(ny-1)]-uin[1:(nx-2),0:(ny-3)])*dy20
-				upvpx = uin[1:(nx-2),1:(ny-2)] * (vin[2:(nx-1),1:(ny-2)]-vin[0:(nx-3),1:(ny-2)])*dx20
-				vpvpy = vin[1:(nx-2),1:(ny-2)] * (vin[1:(nx-2),2:(ny-1)]-vin[1:(nx-2),0:(ny-3)])*dy20
-				fv   = f[1:(nx-2),1:(ny-2)]*vin[1:(nx-2),1:(ny-2)]
-				fu   = f[1:(nx-2),1:(ny-2)]*uin[1:(nx-2),1:(ny-2)]
-				gphpx = (hin[2:(nx-1),1:(ny-2)]-hin[0:(nx-3),1:(ny-2)])*gdx20
-				gphpy = (hin[1:(nx-2),2:(ny-1)]-hin[1:(nx-2),0:(ny-3)])*gdy20
-				bu = vd*uin[1:(nx-2),1:(ny-2)]
-				bv = vd*vin[1:(nx-2),1:(ny-2)]
-				pupxx = (uin[2:(nx-1),1:(ny-2)]-2.0*uin[1:(nx-2),1:(ny-2)]+uin[0:(nx-3),1:(ny-2)])*nudxx
-				pupyy = (uin[1:(nx-2),2:(ny-1)]-2.0*uin[1:(nx-2),1:(ny-2)]+uin[1:(nx-2),0:(ny-3)])*nudyy
-				pvpxx = (vin[2:(nx-1),1:(ny-2)]-2.0*vin[1:(nx-2),1:(ny-2)]+vin[0:(nx-3),1:(ny-2)])*nudxx
-				pvpyy = (vin[1:(nx-2),2:(ny-1)]-2.0*vin[1:(nx-2),1:(ny-2)]+vin[1:(nx-2),0:(ny-3)])*nudyy
+				phupx = (huin[2:nx,1:ny-1]-huin[0:(nx-2),1:(ny-1)])*dx20
+				phupy = (huin[1:(nx-1),2:ny]-huin[1:(nx-1),0:(ny-2)])*dy20
+				phvpx = (hvin[2:nx,1:(ny-1)]-hvin[0:(nx-2),1:(ny-1)])*dx20
+				phvpy = (hvin[1:(nx-1),2:ny]-hvin[1:(nx-1),0:(ny-2)])*dy20
+				upupx = uin[1:(nx-1),1:(ny-1)] * (uin[2:nx,1:(ny-1)]-uin[0:(nx-2),1:(ny-1)])*dx20
+				vpupy = vin[1:(nx-1),1:(ny-1)] * (uin[1:(nx-1),2:ny]-uin[1:(nx-1),0:(ny-2)])*dy20
+				upvpx = uin[1:(nx-1),1:(ny-1)] * (vin[2:nx,1:(ny-1)]-vin[0:(nx-2),1:(ny-1)])*dx20
+				vpvpy = vin[1:(nx-1),1:(ny-1)] * (vin[1:(nx-1),2:ny]-vin[1:(nx-1),0:(ny-2)])*dy20
+				fv   = f[1:(nx-1),1:(ny-1)]*vin[1:(nx-1),1:(ny-1)]
+				fu   = f[1:(nx-1),1:(ny-1)]*uin[1:(nx-1),1:(ny-1)]
+				gphpx = (hin[2:nx,1:(ny-1)]-hin[0:(nx-2),1:(ny-1)])*gdx20
+				gphpy = (hin[1:(nx-1),2:ny]-hin[1:(nx-1),0:(ny-2)])*gdy20
+				bu = vd*uin[1:(nx-1),1:(ny-1)]
+				bv = vd*vin[1:(nx-1),1:(ny-1)]
+				pupxx = (uin[2:nx,1:(ny-1)]-2.0*uin[1:(nx-1),1:(ny-1)]+uin[0:(nx-2),1:(ny-1)])*nudxx
+				pupyy = (uin[1:(nx-1),2:ny]-2.0*uin[1:(nx-1),1:(ny-1)]+uin[1:(nx-1),0:(ny-2)])*nudyy
+				pvpxx = (vin[2:nx,1:(ny-1)]-2.0*vin[1:(nx-1),1:(ny-1)]+vin[0:(nx-2),1:(ny-1)])*nudxx
+				pvpyy = (vin[1:(nx-1),2:ny]-2.0*vin[1:(nx-1),1:(ny-1)]+vin[1:(nx-1),0:(ny-2)])*nudyy
 
-				kh1[1:nx-2,1:ny-2] = - (phupx + phvpy)
-				ku1[1:nx-2,1:ny-2] = - (upupx + vpupy) + fv - gphpx - bu + (pupxx + pupyy)
-				kv1[1:nx-2,1:ny-2] = - (upvpx + vpvpy) - fu - gphpy - bv + (pvpxx + pvpyy)
+				kh1[1:nx-1,1:ny-1] = - (phupx + phvpy)
+				ku1[1:nx-1,1:ny-1] = - (upupx + vpupy) + fv - gphpx - bu + (pupxx + pupyy)
+				kv1[1:nx-1,1:ny-1] = - (upvpx + vpvpy) - fu - gphpy - bv + (pvpxx + pvpyy)
 
 				#deal with boundaries
 				for j2 in [0,ny-1]:
-					# boundary_periodic(j2,ny,yb,yc,yf)
 					yb,yc,yf = boundary_periodic(j2,ny,yb,yc,yf)
 					for i2 in range(0,nx):
 						# pdb.set_trace()
@@ -154,8 +154,6 @@ def swe_solve(uin, vin, hin, uout, vout, hout):
 						vpvpy = vin[xc,yc] * (vin[xc,yf]-vin[xc,yb])*dy20
 						fv   = f[xc,yc]*vin[xc,yc]
 						fu   = f[xc,yc]*uin[xc,yc]
-						#gphpx = (hin[xf,yc]-hin[xb,yc])*gdx20
-						#gphpy = (hin[xc,yf]-hin[xc,yb])*gdy20
 						gphpx = (hin[xf,yc]-hin[xb,yc])*gdx20
 						gphpy = (hin[xc,yf]-hin[xc,yb])*gdy20
 						bu = vd*uin[xc,yc]
@@ -176,7 +174,8 @@ def swe_solve(uin, vin, hin, uout, vout, hout):
 					# boundary_periodic(j2,ny,yb,yc,yf)
 					xb,xc,xf = boundary_periodic(i2,nx,xb,xc,xf)
 					for j2 in range(1,ny-1):
-						# pdb.set_trace()
+						# if t>30:
+						# 	pdb.set_trace()
 						yb,yc,yf = boundary_periodic(j2,ny,yb,yc,yf)
 						phupx = (huin[xf,yc]-huin[xb,yc])*dx20
 						phupy = (huin[xc,yf]-huin[xc,yb])*dy20
@@ -188,8 +187,6 @@ def swe_solve(uin, vin, hin, uout, vout, hout):
 						vpvpy = vin[xc,yc] * (vin[xc,yf]-vin[xc,yb])*dy20
 						fv   = f[xc,yc]*vin[xc,yc]
 						fu   = f[xc,yc]*uin[xc,yc]
-						#gphpx = (hin[xf,yc]-hin[xb,yc])*gdx20
-						#gphpy = (hin[xc,yf]-hin[xc,yb])*gdy20
 						gphpx = (hin[xf,yc]-hin[xb,yc])*gdx20
 						gphpy = (hin[xc,yf]-hin[xc,yb])*gdy20
 						bu = vd*uin[xc,yc]
@@ -207,6 +204,9 @@ def swe_solve(uin, vin, hin, uout, vout, hout):
 						kh1[i2,j2] = phpt
 
 	#pdb.set_trace()
+	if t>30:
+		np.set_printoptions(threshold=np.inf)
+		#print kh1
 	return ku1, kv1, kh1
 
 def swe_rk4(ts):
@@ -214,6 +214,8 @@ def swe_rk4(ts):
 	 t timestep
 	'''
 	global ku1,kv1,kh1,ku2,kv2,kh2,ku3,kv3,kh3,ku4,kv4,kh4
+	global t
+	t = ts
 	nx = param.nx
 	ny = param.ny
 

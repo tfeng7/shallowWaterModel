@@ -20,8 +20,6 @@ u = np.array(fp.variables['uwnd'][:])
 v = np.array(fp.variables['vwnd'][:])
 
 uv = (u**2.0 + v**2.0)**0.5
-h = np.swapaxes(h,0,2)
-uv = np.swapaxes(uv,0,2)
 
 # regridding data for smoother values
 

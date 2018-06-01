@@ -5,6 +5,7 @@ import parameters as param
 from swe_rk4 import swe_rk4 as swe
 import varGlobal as var
 import time
+import numpy as np
 
 def output_netcdf():
 	da=nc.Dataset(param.fname,'w',format='NETCDF4')
@@ -24,11 +25,13 @@ def output_netcdf():
 
   # change dimension from Lon-Lat-Time to Time-Lat-Lon
 	h = np.swapaxes(var.h,0,2)
-  u = np.swapaxes(var.u,0,2)
-  v = np.swapaxes(var.v,0,2)
-	da.variables['height'][:] = var.h
-	da.variables['uwnd'][:] = var.u
-	da.variables['vwnd'][:] = var.v
+	u = np.swapaxes(var.u,0,2)
+	v = np.swapaxes(var.v,0,2)
+	print("Output results to file: " + param.fname)
+	da.variables['height'][:] = h
+	da.variables['uwnd'][:] = u
+	da.variables['vwnd'][:] = v
 	da.close()
+	print("Output finished.")
 
 

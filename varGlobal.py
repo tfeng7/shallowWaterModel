@@ -11,10 +11,10 @@ def _init():
 	global v
 	global h
 	global f
-	u = np.zeros([param.nx, param.ny, param.nt], dtype = Decimal, order = 'F')
-	v = np.zeros([param.nx, param.ny, param.nt], dtype = Decimal, order = 'F')
-	h = np.zeros([param.nx, param.ny, param.nt], dtype = Decimal, order = 'F')
-	f = np.zeros([param.nx, param.ny], dtype = Decimal, order = 'F')
+	u = np.zeros([param.nx, param.ny, param.nt], dtype = float, order = 'F')
+	v = np.zeros([param.nx, param.ny, param.nt], dtype = float, order = 'F')
+	h = np.zeros([param.nx, param.ny, param.nt], dtype = float, order = 'F')
+	f = np.zeros([param.nx, param.ny], dtype = float, order = 'F')
 	for i1 in range(0,param.ny):
 		f[:, i1] = 2.0*param.omega*math.sin(param.pi*param.lat[i1]/param.ly)
 
